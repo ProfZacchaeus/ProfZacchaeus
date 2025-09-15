@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEDCo E-Commerce</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .navbar { margin-bottom: 20px; }
+    .hero { background: #004080; color: white; padding: 60px 20px; text-align: center; }
+    .product-card { transition: transform 0.2s; }
+    .product-card:hover { transform: scale(1.05); }
+    .product-img { max-height: 180px; object-fit: contain; margin-bottom: 15px; }
+    footer { background: #004080; color: white; padding: 20px; text-align: center; margin-top: 40px; }
+    .cart-img { width: 40px; height: 40px; object-fit: contain; margin-right: 10px; }
+    .remove-btn { margin-left: auto; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">NEDCo</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#shop">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="#checkout">Checkout</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <h1>Welcome to NEDCo E-Commerce</h1>
+    <p>Pay bills, buy prepaid credits, and access NEDCo services online.</p>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="container my-5">
+    <h2>About Us</h2>
+    <p>NEDCo (Northern Electricity Distribution Company) is responsible for power distribution in Northern Ghana. This platform allows customers to pay electricity bills, purchase prepaid units, and access support services conveniently.</p>
+  </section>
+
+  <!-- Shop Section -->
+  <section id="shop" class="container my-5">
+    <h2>Our Products & Services</h2>
+    <div class="row g-4">
+      <!-- Product 1 -->
+      <div class="col-md-4">
+        <div class="card product-card">
+          <div class="card-body text-center">
+            <img src="images/prepaid.jpeg" alt="Prepaid Units" class="product-img">
+            <h5 class="card-title">Prepaid Units</h5>
+            <p class="card-text">Buy prepaid electricity credits.</p>
+            <p class="fw-bold">GHS 50</p>
+            <button class="btn btn-primary" onclick="addToCart('Prepaid Units', 50, 'images/prepaid.jpeg')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+      <!-- Product 2 -->
+      <div class="col-md-4">
+        <div class="card product-card">
+          <div class="card-body text-center">
+            <img src="images/meter.jpeg" alt="Electricity Meter" class="product-img">
+            <h5 class="card-title">Meters</h5>
+            <p class="card-text">Request or purchase new meters.</p>
+            <p class="fw-bold">GHS 200</p>
+            <button class="btn btn-primary" onclick="addToCart('Meter', 200, 'images/meter.jpeg')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+      <!-- Product 3 -->
+      <div class="col-md-4">
+        <div class="card product-card">
+          <div class="card-body text-center">
+            <img src="images/poles.jpeg" alt="Poles and Cables" class="product-img">
+            <h5 class="card-title">Poles & Cables</h5>
+            <p class="card-text">Procure electrical poles and cables.</p>
+            <p class="fw-bold">GHS 1000</p>
+            <button class="btn btn-primary" onclick="addToCart('Poles & Cables', 500, 'images/poles.jpeg')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Section -->
+    <div class="mt-5">
+      <h3>Your Cart</h3>
+      <ul id="cart-list" class="list-group"></ul>
+      <p id="cart-total" class="fw-bold mt-2"></p>
+      <button id="clearCartBtn" class="btn btn-warning mt-2" style="display:none;" onclick="clearCart()">Clear Cart</button>
+    </div>
+  </section>
+
+  <!-- Checkout Section -->
+  <section id="checkout" class="container my-5">
+    <h2>Checkout</h2>
+    <p>Fill in your details to simulate payment for your selected items.</p>
+    <form id="checkoutForm">
+      <div class="mb-3">
+        <label for="fullName" class="form-label">Full Name</label>
+        <input type="text" id="fullName" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="meterId" class="form-label">Meter ID</label>
+        <input type="text" id="meterId" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="amount" class="form-label">Amount (GHS)</label>
+        <input type="number" id="amount" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="paymentMethod" class="form-label">Payment Method</label>
+        <select id="paymentMethod" class="form-control" required>
+          <option value="">-- Select --</option>
+          <option value="momo">Mobile Money</option>
+          <option value="card">Debit/Credit Card</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-success">Simulate Payment</button>
+    </form>
+    <div id="confirmationMessage" class="alert alert-success mt-3" style="display:none;">
+      Payment successful! Thank you for using NEDCo.
+      <br>
+      <button class="btn btn-outline-primary mt-2" onclick="downloadInvoice()">Download Invoice</button>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="container my-5">
+    <h2>Contact Us</h2>
+    <p>Email: support@nedco.com | Phone: +233-XXX-XXXXXX</p>
+    <form>
+      <div class="mb-3">
+        <label for="name" class="form-label">Your Name</label>
+        <input type="text" id="name" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Your Email</label>
+        <input type="email" id="email" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="message" class="form-label">Message</label>
+        <textarea id="message" class="form-control" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 NEDCo. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    let cart = [];
+    let lastCheckout = {};
+
+    function addToCart(item, price, img) {
+      cart.push({name: item, price: price, img: img});
+      displayCart();
+    }
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      displayCart();
+    }
+    function clearCart() {
+      cart = [];
+      displayCart();
+    }
+    function displayCart() {
+      const cartList = document.getElementById('cart-list');
+      const cartTotal = document.getElementById('cart-total');
+      const clearCartBtn = document.getElementById('clearCartBtn');
+      cartList.innerHTML = '';
+      let total = 0;
+      cart.forEach((product, index) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex align-items-center';
+        li.innerHTML = `<img src="${product.img}" class="cart-img"> ${product.name} - GHS ${product.price} <button class='btn btn-sm btn-danger remove-btn' onclick='removeFromCart(${index})'>Remove</button>`;
+        cartList.appendChild(li);
+        total += product.price;
+      });
+      cartTotal.textContent = total > 0 ? `Total: GHS ${total}` : '';
+      clearCartBtn.style.display = cart.length > 0 ? 'inline-block' : 'none';
+    }
+
+    // Checkout confirmation
+    document.getElementById('checkoutForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const name = document.getElementById('fullName').value;
+      const meterId = document.getElementById('meterId').value;
+      const amount = document.getElementById('amount').value;
+      const method = document.getElementById('paymentMethod').value;
+
+      lastCheckout = { name, meterId, amount, method };
+
+      document.getElementById('confirmationMessage').style.display = 'block';
+      this.reset();
+      clearCart();
+    });
+
+    // Download invoice using jsPDF
+    async function downloadInvoice() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text("NEDCo Payment Invoice", 20, 20);
+      doc.setFontSize(12);
+      doc.text("Thank you for your payment.", 20, 30);
+      doc.text("Date: " + new Date().toLocaleString(), 20, 40);
+      doc.text("Customer: " + (lastCheckout.name || "N/A"), 20, 50);
+      doc.text("Meter ID: " + (lastCheckout.meterId || "N/A"), 20, 60);
+      doc.text("Payment Method: " + (lastCheckout.method || "N/A"), 20, 70);
+      doc.text("Total Paid: GHS " + (lastCheckout.amount || "0"), 20, 80);
+      doc.save("NEDCo_Invoice.pdf");
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
